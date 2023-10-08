@@ -5,4 +5,4 @@
 </video>
 
 
-[Demo Link](./demo.mov)
+[Demo Video](./demo.mov)
