@@ -1,24 +1,63 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { TextInput } from './Components/TextInput/TextInput';
+import { ColumnTypes, List } from './Components/List/List';
+import { githubUsersStore } from './dataStores/usersStore';
+import { ChangeEvent } from 'react';
 
 function App() {
+  const {users,searchUsers} = githubUsersStore(state => state);
+  
+  function handleTextChange(event: React.FormEvent<HTMLInputElement>) {
+    const value = event.currentTarget.value;
+    searchUsers(value);
+  }
+
+  function makeListData() {
+    const data = users.map(user => [
+      {
+        type: ColumnTypes.IMAGE,
+        value:user.avatar_url
+      },       
+      {
+        type: ColumnTypes.STRING,
+        value:user.login
+      }, 
+      {
+        type: ColumnTypes.LINK,
+        value:user.html_url
+      }, 
+      {
+        type: ColumnTypes.STRING,
+        value:user.score.toString()
+      }
+    ]);
+    const header = [
+      {
+        type: ColumnTypes.STRING,
+        value:"Avatar"
+      },       
+      {
+        type: ColumnTypes.STRING,
+        value:"Username"
+      }, 
+      {
+        type: ColumnTypes.STRING,
+        value:"Profile link"
+      }, 
+      {
+        type: ColumnTypes.STRING,
+        value:"Score"
+      }
+    ]
+     data.unshift(header);
+    return data;
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div>
+        <TextInput onChange={handleTextChange}/>
+      </div>
+      <List data={makeListData()}/>
     </div>
   );
 }
